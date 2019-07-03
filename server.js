@@ -8,7 +8,7 @@ const port = 5000;
 let type = "";
 let lat = "";
 let lng = "";
-let searchQuery = "Victory Column"
+let searchQuery = "Strausberger Platz"
 let location = "";
 
 const getData = async () => {
@@ -16,7 +16,7 @@ const getData = async () => {
     return await axios.get(
       `https://api.opencagedata.com/geocode/v1/json?q=${searchQuery}%2C%20${location}&key=${
         secrets.API_KEY
-      }&language=en&pretty=1&countrycode=de`
+      }&language=en&pretty=1&countrycode=de&limit=1`
     );
   } catch (err) {
     console.log("Error in getData(): ", err.message);
@@ -35,15 +35,18 @@ const handleData = async () => {
   }
   } catch(err) {
     console.log("Error in handleData(): ", err.message);
-  }
-  
+  } 
 };
 
 handleData();
 
 app.get("/api", (req, res) => {
-  const string = "Hello World! " + type;
-  res.json(string);
+  const geolocation = {
+    type: type,
+    lat: lat,
+    lng: lng
+  }
+  res.json(geolocation);
 });
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
