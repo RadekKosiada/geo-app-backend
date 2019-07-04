@@ -26,22 +26,20 @@ app.post("/submitQuery", (req, res) => {
   handleData(searchQuery);
 });
 
-  const getData = async (query) => {
-    console.log("getData fired", query)
-    try {
-      return await axios.get(
-        `https://api.opencagedata.com/geocode/v1/json?q=${query}%2C%20${location}&key=${
-          secrets.API_KEY
-        }&language=en&pretty=1&countrycode=de&limit=1`
-      );
-    } catch (err) {
-      console.log("Error in getData(): ", err.message);
-    }
-    
-  };
+const getData = async query => {
+  console.log("getData fired", query);
+  try {
+    return await axios.get(
+      `https://api.opencagedata.com/geocode/v1/json?q=${query}%2C%20${location}&key=${
+        secrets.API_KEY
+      }&language=en&pretty=1&countrycode=de&limit=1`
+    );
+  } catch (err) {
+    console.log("Error in getData(): ", err.message);
+  }
+};
 
-
-const handleData = async (query) => {
+const handleData = async query => {
   try {
     //calling getData with query from handleData()
     const response = await getData(query);
@@ -51,24 +49,23 @@ const handleData = async (query) => {
       lat = response.data.results[0].geometry.lat;
       lng = response.data.results[0].geometry.lng;
       address = response.data.results[0].formatted;
-      console.log("data from handleData()", response.data.results[0].geometry.lat);
+      console.log("data from handleData()", lat, lng);
     }
   } catch (err) {
     console.log("Error in handleData(): ", err.message);
   }
 };
 
-
-
 app.get("/api", (req, res) => {
   const geolocation = {
-    type: type,
-    lat: lat,
-    lng: lng,
-    address: address
+    'type': type,
+    'lat': lat,
+    'lng': lng,
+    'address': address
   };
+  console.log("GEO", geolocation)
+
   res.json(geolocation);
 });
-
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
