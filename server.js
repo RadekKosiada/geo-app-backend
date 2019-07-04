@@ -13,39 +13,52 @@ app.use(bodyParser.json());
 let type = "";
 let lat = "";
 let lng = "";
-let searchQuery = "Victory column";
+let searchQuery = "";
 let location = "";
 let address = "";
 
-const getData = async () => {
-  try {
-    return await axios.get(
-      `https://api.opencagedata.com/geocode/v1/json?q=${searchQuery}%2C%20${location}&key=${
-        secrets.API_KEY
-      }&language=en&pretty=1&countrycode=de&limit=1`
-    );
-  } catch (err) {
-    console.log("Error in getData(): ", err.message);
-  }
-};
+app.post("/submitQuery", (req, res) => {
+  const response = "Thanks for submitting the query.";
+  console.log(req.body.searchQuery);
+  searchQuery = req.body.searchQuery;
+  res.json(response);
+  //calling handleData() and passing searchQuery from client
+  handleData(searchQuery);
+});
 
-const handleData = async () => {
+  const getData = async (query) => {
+    console.log("getData fired", query)
+    try {
+      return await axios.get(
+        `https://api.opencagedata.com/geocode/v1/json?q=${query}%2C%20${location}&key=${
+          secrets.API_KEY
+        }&language=en&pretty=1&countrycode=de&limit=1`
+      );
+    } catch (err) {
+      console.log("Error in getData(): ", err.message);
+    }
+    
+  };
+
+
+const handleData = async (query) => {
   try {
-    const response = await getData();
+    //calling getData with query from handleData()
+    const response = await getData(query);
 
     if (response.data) {
       type = response.data.results[0].components._type;
       lat = response.data.results[0].geometry.lat;
       lng = response.data.results[0].geometry.lng;
       address = response.data.results[0].formatted;
-      // console.log(response.data.results[0]);
+      console.log("data from handleData()", response.data.results[0].geometry.lat);
     }
   } catch (err) {
     console.log("Error in handleData(): ", err.message);
   }
 };
 
-handleData();
+
 
 app.get("/api", (req, res) => {
   const geolocation = {
@@ -57,10 +70,5 @@ app.get("/api", (req, res) => {
   res.json(geolocation);
 });
 
-app.post("/submitQuery", (req, res) => {
-  const response = "Thanks for submitting the query.";
-  console.log(req.body);
-  res.json(response);
-});
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
