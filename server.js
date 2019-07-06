@@ -16,28 +16,31 @@ let lng = "";
 let searchQuery = "";
 let location = "";
 let address = "";
+let errorMessage = "Could not fetch data from the server";
 
-app.post("/submitQuery", (req, res) => {
-  const response = "Thanks for submitting the query.";
-  console.log(req.body.searchQuery);
-  searchQuery = req.body.searchQuery;
-  res.json(response);
-  //calling handleData() and passing searchQuery from client
-  handleData(searchQuery);
-});
-
-const getData = async query => {
-  console.log("getData fired", query);
+app.post("/submitQuery", async (req, res) => {
+  const response = await [{message: "Thanks for submitting the query"}, {geolocation: {}}, {error: {}}];
   try {
-    return await axios.get(
-      `https://api.opencagedata.com/geocode/v1/json?q=${query}%2C%20${location}&key=${
-        secrets.API_KEY
-      }&language=en&pretty=1&countrycode=de&limit=1`
-    );
+    searchQuery = await req.body.searchQuery;
+    const fetchData = await handleData(searchQuery);
+    const geolocation = {
+          type: type,
+          lat: lat,
+          lng: lng,
+          address: address
+        };
+        if(lat){
+          response[1] = geolocation;
+        } else {
+          response[2] = errorMessage;
+        }
+    
+  res.json(response);
   } catch (err) {
-    console.log("Error in getData(): ", err.message);
+    console.log("Error in submitQuery: ", err)
+
   }
-};
+});
 
 const handleData = async query => {
   try {
@@ -56,16 +59,17 @@ const handleData = async query => {
   }
 };
 
-app.get("/api", (req, res) => {
-  const geolocation = {
-    'type': type,
-    'lat': lat,
-    'lng': lng,
-    'address': address
-  };
-  console.log("GEO", geolocation)
-
-  res.json(geolocation);
-});
+const getData = async query => {
+  console.log("getData fired", query);
+  try {
+    return await axios.get(
+      `https://api.opencagedata.com/geocode/v1/json?q=${query}%2C%20${location}&key=${
+        secrets.API_KEY
+      }&language=en&pretty=1&countrycode=de&limit=1`
+    );
+  } catch (err) {
+    console.log("Error in getData(): ", err.message);
+  }
+}; 
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
