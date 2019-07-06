@@ -16,7 +16,7 @@ let lng = "";
 let searchQuery = "";
 let location = "";
 let address = "";
-let errorMessage = "Could not fetch data from the server";
+let errorMessage = "Location could not be found";
 
 app.post("/submitQuery", async (req, res) => {
   const response = await [
@@ -27,14 +27,17 @@ app.post("/submitQuery", async (req, res) => {
   try {
     searchQuery = await req.body.searchQuery;
     const fetchData = await handleData(searchQuery);
+
     const geolocation = {
       type: type,
       lat: lat,
       lng: lng,
       address: address
     };
+
     if (lat) {
       response[1] = geolocation;
+      response[2] = "";
     } else {
       response[2] = errorMessage;
     }
@@ -49,7 +52,6 @@ const handleData = async query => {
   try {
     //calling getData with query from handleData()
     const response = await getData(query);
-
     if (response.data) {
       type = response.data.results[0].components._type;
       lat = response.data.results[0].geometry.lat;
@@ -60,8 +62,8 @@ const handleData = async query => {
   } catch (err) {
     console.log("Error in handleData(): ", err.message);
     type = "";
-    lat = "";
-    lng = "";
+    lat = ""; 
+    lng = ""; 
     address = "";
   }
 };
