@@ -10,14 +10,15 @@ Single page application showing a map and allowing to see two chosen locations, 
 * Axios
 
 ### UI Design 
-Relates to the mockup, but some UX friendly solutions have been added.
-Once the search query is, input and submit button disappears. The place of the input is taken by the name of the location. 
+Relates to the mockup, but some UX friendly solutions have been added to direct user's behavior.
+Once the search query is, input and Submit button disappears. The place of the input is taken by the name of the location. 
 Once the coordinates are displayed two new buttons are added to the UI: Edit and Delete. They disappear after deleting the location and the Submit button is back.
+User cannot and will not do both Submit or Edit/Delete and UI doesn't need to be filled with them neither user needs to be distracted by necessary elements. 
 After submitting a new query previous set of data is removed from the page, 'waiting for data' is displayed until new information is received and shown. 
 Additional hover effects on buttons; 
 
 ### Further steps:
-Adding unit tests;
+Adding unit and integration tests;
 Refactoring of App.js, mainly to get rid of some repetitions in if blocks, that check which locations/input should be updated;
  
 ## Backend
