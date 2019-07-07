@@ -10,15 +10,10 @@ const port = 5000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-let type1 = "";
-let lat1 = "";
-let lng1 = "";
-let address1 = "";
-
-// let type2 = "";
-// let lat2 = "";
-// let lng2 = "";
-// let address2 = "";
+let type = "";
+let lat = "";
+let lng = "";
+let address = "";
 
 let searchQuery = "";
 let location = "";
@@ -26,7 +21,7 @@ let location = "";
 let errorMessage = "Location could not be found";
 
 app.post("/submitQuery/:param", async (req, res) => {
-  const response = await [
+  const response = [
     { message: "Thanks for submitting the query" },
     [ { geolocation: {} },
       { error: {} }
@@ -41,31 +36,15 @@ app.post("/submitQuery/:param", async (req, res) => {
     let param = await Number(req.params.param);
     const fetchData = await handleData(searchQuery);
 
-    if(param === 1) {
-      const geolocation1 = {
-        type: type1,
-        lat: lat1,
-        lng: lng1,
-        address: address1
+    if(param === 1 || param == 2) {
+      const geolocation = {
+        type: type,
+        lat: lat,
+        lng: lng,
+        address: address
       };
-      if (lat1) {
-        response[param][0].geolocation = geolocation1;
-        response[param][0].error = "";
-      } else {
-        response[param][0].error = errorMessage;
-        response[param][0].geolocation = "";
-      }
-    }
-    
-    if(param === 2) {
-      const geolocation2 = {
-        type: type1,
-        lat: lat1,
-        lng: lng1,
-        address: address1
-      };
-      if (lat1) {
-        response[param][0].geolocation = geolocation2;
+      if (lat) {
+        response[param][0].geolocation = geolocation;
         response[param][0].error = "";
       } else {
         response[param][0].error = errorMessage;
@@ -85,18 +64,18 @@ const handleData = async query => {
     //calling getData with query from handleData()
     const response = await getData(query);
     if (response.data) {
-      type1 = response.data.results[0].components._type;
-      lat1 = response.data.results[0].geometry.lat;
-      lng1 = response.data.results[0].geometry.lng;
-      address1 = response.data.results[0].formatted;
-      console.log("ONE data from handleData()", lat1, lng1);
+      type = response.data.results[0].components._type;
+      lat = response.data.results[0].geometry.lat;
+      lng = response.data.results[0].geometry.lng;
+      address = response.data.results[0].formatted;
+      console.log("ONE data from handleData()", lat, lng);
     }
   } catch (err) {
     console.log("Error in handleData(): ", err.message);
-    type1 = "";
-    lat1 = ""; 
-    lng1 = ""; 
-    address1 = "";
+    type = "";
+    lat = ""; 
+    lng = ""; 
+    address = "";
   }
 };
 
