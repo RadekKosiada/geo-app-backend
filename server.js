@@ -80,7 +80,7 @@ const getData = async query => {
     return await axios.get(
       `https://api.opencagedata.com/geocode/v1/json?q=${query}%2C%20${location}&key=${
         secrets.API_KEY
-      }&language=en&pretty=1&countrycode=de&limit=1`
+      }&language=en&pretty=1&limit=!`
     );
   } catch (err) {
     console.log("Error in getData(): ", err.message);
