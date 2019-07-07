@@ -20,7 +20,7 @@ let location = "";
 
 let errorMessage = "Location could not be found";
 
-app.post("/submitQuery/:param", async (req, res) => {
+app.post("/submitQuery/:number", async (req, res) => {
   const response = [
     { message: "Thanks for submitting the query" },
     [ { geolocation: {} },
@@ -33,7 +33,7 @@ app.post("/submitQuery/:param", async (req, res) => {
 
   try {
     searchQuery = await req.body.searchQuery;
-    let param = await Number(req.params.param);
+    let number = await Number(req.params.number);
     const fetchData = await handleData(searchQuery);
 
       const geolocation = {
@@ -43,11 +43,11 @@ app.post("/submitQuery/:param", async (req, res) => {
         address: address
       };
       if (lat) {
-        response[param][0].geolocation = geolocation;
-        response[param][0].error = "";
+        response[number][0].geolocation = geolocation;
+        response[number][0].error = "";
       } else {
-        response[param][0].error = errorMessage;
-        response[param][0].geolocation = "";
+        response[number][0].error = errorMessage;
+        response[number][0].geolocation = "";
       }
     
     res.json(response);
