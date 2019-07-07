@@ -30,13 +30,12 @@ app.post("/submitQuery/:param", async (req, res) => {
       { error: {} }
     ],  
   ];
-  // console.log("PARAM", Number(req.params.param), "RES", response[req.params.param])
+
   try {
     searchQuery = await req.body.searchQuery;
     let param = await Number(req.params.param);
     const fetchData = await handleData(searchQuery);
 
-    if(param === 1 || param == 2) {
       const geolocation = {
         type: type,
         lat: lat,
@@ -50,9 +49,7 @@ app.post("/submitQuery/:param", async (req, res) => {
         response[param][0].error = errorMessage;
         response[param][0].geolocation = "";
       }
-    }
     
-    console.log("PARAM", param, "RES", response[param])
     res.json(response);
   } catch (err) {
     console.log("Error in submitQuery: ", err);
@@ -68,7 +65,6 @@ const handleData = async query => {
       lat = response.data.results[0].geometry.lat;
       lng = response.data.results[0].geometry.lng;
       address = response.data.results[0].formatted;
-      console.log("ONE data from handleData()", lat, lng);
     }
   } catch (err) {
     console.log("Error in handleData(): ", err.message);
@@ -80,7 +76,6 @@ const handleData = async query => {
 };
 
 const getData = async query => {
-  console.log("getData fired", query);
   try {
     return await axios.get(
       `https://api.opencagedata.com/geocode/v1/json?q=${query}%2C%20${location}&key=${
