@@ -13,41 +13,67 @@ app.use(bodyParser.json());
 let type1 = "";
 let lat1 = "";
 let lng1 = "";
-let searchQuery1 = "";
-let location = "";
 let address1 = "";
-let errorMessage1 = "Location could not be found";
+
+// let type2 = "";
+// let lat2 = "";
+// let lng2 = "";
+// let address2 = "";
+
+let searchQuery = "";
+let location = "";
+
+let errorMessage = "Location could not be found";
 
 app.post("/submitQuery/:param", async (req, res) => {
   const response = await [
     { message: "Thanks for submitting the query" },
-    [ { geolocation1: {} },
-      { error1: {} }
+    [ { geolocation: {} },
+      { error: {} }
     ],
-    [ { geolocation2: {} },
-      { error2: {} }
+    [ { geolocation: {} },
+      { error: {} }
     ],  
   ];
-  console.log("PARAM", Number(req.params.param), "RES", response[1][0].geolocation1)
+  // console.log("PARAM", Number(req.params.param), "RES", response[req.params.param])
   try {
     searchQuery = await req.body.searchQuery;
+    let param = await Number(req.params.param);
     const fetchData = await handleData(searchQuery);
 
-    const geolocation1 = {
-      type: type1,
-      lat: lat1,
-      lng: lng1,
-      address: address1
-    };
-  
-    if (lat1) {
-      response[1][0].geolocation1 = geolocation1;
-      response[1][0].error1 = "";
-    } else {
-      response[1][0].error1 = errorMessage1;
-      response[1][0].geolocation1 = "";
+    if(param === 1) {
+      const geolocation1 = {
+        type: type1,
+        lat: lat1,
+        lng: lng1,
+        address: address1
+      };
+      if (lat1) {
+        response[param][0].geolocation = geolocation1;
+        response[param][0].error = "";
+      } else {
+        response[param][0].error = errorMessage;
+        response[param][0].geolocation = "";
+      }
     }
-  
+    
+    if(param === 2) {
+      const geolocation2 = {
+        type: type1,
+        lat: lat1,
+        lng: lng1,
+        address: address1
+      };
+      if (lat1) {
+        response[param][0].geolocation = geolocation2;
+        response[param][0].error = "";
+      } else {
+        response[param][0].error = errorMessage;
+        response[param][0].geolocation = "";
+      }
+    }
+    
+    console.log("PARAM", param, "RES", response[param])
     res.json(response);
   } catch (err) {
     console.log("Error in submitQuery: ", err);
