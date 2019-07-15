@@ -34,15 +34,15 @@ app.post("/submitQuery/:number", async (req, res) => {
   try {
     searchQuery = await req.body.searchQuery;
     let number = await Number(req.params.number);
-    const fetchData = await handleData(searchQuery);
+    const geolocation = await handleData(searchQuery);
 
-      const geolocation = {
-        type: type,
-        lat: lat,
-        lng: lng,
-        address: address
-      };
-      if (lat) {
+      // const geolocation = {
+      //   type: type,
+      //   lat: lat,
+      //   lng: lng,
+      //   address: address
+      // };
+      if (geolocation.lat) {
         response[number][0].geolocation = geolocation;
         response[number][0].error = "";
       } else {
@@ -61,17 +61,23 @@ const handleData = async query => {
     //calling getData with query from handleData()
     const response = await getData(query);
     if (response.data) {
-      type = response.data.results[0].components._type;
-      lat = response.data.results[0].geometry.lat;
-      lng = response.data.results[0].geometry.lng;
-      address = response.data.results[0].formatted;
+      return {
+        type: response.data.results[0].components._type,
+      lat: response.data.results[0].geometry.lat,
+      lng: response.data.results[0].geometry.lng,
+      address: response.data.results[0].formatted,
+      }
+      
     }
   } catch (err) {
     console.log("Error in handleData(): ", err.message);
-    type = "";
-    lat = ""; 
-    lng = ""; 
-    address = "";
+    return {
+      type: "",
+      lat: "",
+      lng: "",
+      address: "",
+    }
+   
   }
 };
 
