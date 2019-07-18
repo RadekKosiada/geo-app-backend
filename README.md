@@ -23,7 +23,6 @@ Additional hover effects on buttons;
  
 ## [Backend](https://github.com/RadekKosiada/geo-app-backend)
 
-
 ### Built with:
 * Node.js;
 * Express.js;
