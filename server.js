@@ -10,11 +10,6 @@ const port = 5000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-let type = "";
-let lat = "";
-let lng = "";
-let address = "";
-
 let searchQuery = "";
 let location = "";
 
