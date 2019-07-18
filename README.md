@@ -2,7 +2,7 @@
 
 Single page application showing a map and allowing to see two chosen locations, marked on the map with markers. The map shows Germany by default. Zoom out to see other locations. Look for cities, neighborhoods, sightseeing attractions etc. Page will display the type of the object and its geographical coordinates. 
 
-## Frontend 
+## [Frontend](https://github.com/RadekKosiada/geo-app-frontend)
 
 ### Built with
 * React.js
